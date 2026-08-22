@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kinetiq — made by sinj0x7</title>
+<meta name="description" content="Kinetiq is a free bezier curve editor for DaVinci Resolve and Fusion. Made by sinj0x7 for a friend who was stuck fighting Resolve's tiny graphs.">
+<link rel="icon" type="image/png" href="logo.png">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #141414;
+    color: #d8d4cc;
+    font: 16px/1.7 system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 56px 24px 80px;
+  }
+  main { max-width: 680px; margin: 0 auto; }
+  .top { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+  .top img { width: 48px; height: 48px; border-radius: 10px; }
+  h1 { font-size: 28px; font-weight: 650; letter-spacing: -0.03em; color: #f5a044; }
+  .by { color: #8c877c; font-size: 14px; }
+  .by a { color: #f5a044; }
+  p { margin-bottom: 16px; }
+  a { color: #f5a044; }
+  .dl {
+    display: inline-block;
+    margin: 8px 0 6px;
+    padding: 10px 18px;
+    border: 1px solid #f5a044;
+    color: #f5a044;
+    text-decoration: none;
+    border-radius: 6px;
+  }
+  .dl:hover { background: #f5a044; color: #141414; }
+  .small { color: #8c877c; font-size: 13px; margin-bottom: 36px; }
+  hr { border: 0; border-top: 1px solid #2a2a2a; margin: 36px 0; }
+  h2 { font-size: 15px; font-weight: 600; color: #8c877c; margin-bottom: 12px; }
+  canvas {
+    display: block; width: 100%;
+    background: #101010;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    cursor: grab;
+    touch-action: none;
+  }
+  canvas.grabbing { cursor: grabbing; }
+  #bezval { font: 13px ui-monospace, Consolas, monospace; color: #cfc6b4; margin: 10px 0 8px; }
+  .presets { color: #8c877c; font-size: 14px; }
+  .presets a { cursor: pointer; margin-right: 2px; }
+  .track {
+    margin-top: 10px; height: 26px;
+    background: #101010; border: 1px solid #2a2a2a; border-radius: 6px;
+    position: relative;
+  }
+  .track .dot {
+    position: absolute; top: 50%; width: 10px; height: 10px;
+    border-radius: 50%; background: #f5a044;
+    transform: translate(-50%, -50%);
+  }
+  .track span {
+    position: absolute; right: 8px; top: 0;
+    line-height: 26px; font-size: 11px; color: #555248;
+  }
+  ol { margin: 0 0 14px 20px; }
+  ol li { margin-bottom: 8px; }
+  pre {
+    font: 12px/1.7 ui-monospace, Consolas, monospace;
+    background: #101010;
+    border: 1px solid #2a2a2a;
+    padding: 14px 16px;
+    overflow-x: auto;
+    color: #c8c2b6;
+    margin: 12px 0 16px;
+    border-radius: 6px;
+  }
+  pre b { color: #f5a044; font-weight: 500; }
+  code {
+    font: 13px ui-monospace, Consolas, monospace;
+    background: #101010;
+    border: 1px solid #2a2a2a;
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  footer { margin-top: 48px; color: #8c877c; font-size: 13px; }
+  footer a { color: #8c877c; }
+  footer a:hover { color: #f5a044; }
+</style>
+</head>
+<body>
+<main>
+
+  <div class="top">
+    <img src="logo.png" alt="">
+    <div>
+      <h1>kinetiq</h1>
+      <p class="by">made by <a href="https://github.com/sinj0x7">sinj0x7</a></p>
+    </div>
+  </div>
+
+  <p>
+    This started because a friend of mine was losing time in DaVinci Resolve.
+    Not on the edit — on the graphs. Fusion’s spline editor is so small that
+    shaping a simple ease means zooming in, missing the handle, zooming out,
+    and doing it again. I built Kinetiq so he could grab the curve on a big
+    canvas and send it straight back into his comp.
+  </p>
+  <p>
+    Then I figured other people were probably fighting the same thing, so
+    here it is. Free. MIT. Use it however you want.
+  </p>
+
+  <a class="dl" href="Kinetiq.zip" download>download kinetiq</a>
+  <p class="small">16 KB zip · Resolve 17+ / Fusion 16+ · Windows, macOS, Linux</p>
+
+  <hr>
+
+  <h2>this is the idea — drag the two round handles</h2>
+  <canvas id="cv" height="360"></canvas>
+  <div class="track"><div class="dot" id="dot"></div><span>motion preview</span></div>
+  <div id="bezval">cubic-bezier(0.42, 0.00, 0.58, 1.00)</div>
+  <p class="presets">
+    <a data-p="0.333,0.333,0.667,0.667">linear</a> ·
+    <a data-p="0.42,0,0.58,1">ease-in-out</a> ·
+    <a data-p="1,0,1,1">ease-in 100%</a> ·
+    <a data-p="0.34,1.56,0.64,1">overshoot</a> ·
+    <a data-p="0.36,0,0.66,-0.56">anticipate</a>
+  </p>
+  <p class="small" style="margin-top:16px;">
+    In Resolve it also loads the selected tool’s spline, lets you pick which
+    keyframe pair to edit, and writes the result back as one undo step.
+  </p>
+
+  <hr>
+
+  <h2>install</h2>
+  <ol>
+    <li>Unzip and keep the <code>kinetiq</code> folder together.</li>
+    <li>Copy it into Fusion’s scripts folder:</li>
+  </ol>
+<pre>
+<b>windows</b>  %APPDATA%\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts\Comp\
+<b>macos</b>    ~/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Comp/
+<b>linux</b>    ~/.local/share/DaVinciResolve/Fusion/Scripts/Comp/
+</pre>
+  <ol start="3">
+    <li>Restart Resolve. Windows also needs
+      <a href="https://www.python.org/downloads/">Python 3</a> for scripting.</li>
+    <li>Fusion page → select an animated tool →
+      <code>Workspace &gt; Scripts &gt; kinetiq &gt; Kinetiq</code></li>
+  </ol>
+
+  <footer>
+    made by <a href="https://github.com/sinj0x7">sinj0x7</a>
+    · <a href="https://instagram.com/offgridkhaled">instagram</a>
+    · <a href="Kinetiq.zip" download>download</a>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var cv = document.getElementById("cv");
+  var ctx = cv.getContext("2d");
+  var dot = document.getElementById("dot");
+  var bezval = document.getElementById("bezval");
+  var p1 = { x: 0.42, y: 0.0 };
+  var p2 = { x: 0.58, y: 1.0 };
+  var Y_MIN = -0.7, Y_MAX = 1.7, PAD = 20;
+  var W = 0, H = 0, dpr = 1;
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    W = cv.clientWidth;
+    H = 360;
+    cv.width = W * dpr;
+    cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+  }
+  function toPx(nx, ny) {
+    return {
+      x: PAD + nx * (W - PAD * 2),
+      y: PAD + (Y_MAX - ny) / (Y_MAX - Y_MIN) * (H - PAD * 2)
+    };
+  }
+  function toNorm(px, py) {
+    return {
+      x: (px - PAD) / (W - PAD * 2),
+      y: Y_MAX - (py - PAD) / (H - PAD * 2) * (Y_MAX - Y_MIN)
+    };
+  }
+  function bez(t, a, b) {
+    var mt = 1 - t;
+    return 3 * mt * mt * t * a + 3 * mt * t * t * b + t * t * t;
+  }
+  function easedY(x) {
+    var lo = 0, hi = 1, t, i;
+    for (i = 0; i < 24; i++) {
+      t = (lo + hi) / 2;
+      if (bez(t, p1.x, p2.x) < x) lo = t; else hi = t;
+    }
+    return bez((lo + hi) / 2, p1.y, p2.y);
+  }
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    var i, a, b;
+    ctx.strokeStyle = "#222";
+    ctx.lineWidth = 1;
+    for (i = 0; i <= 10; i++) {
+      a = toPx(i / 10, Y_MIN); b = toPx(i / 10, Y_MAX);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+    for (i = -6; i <= 16; i += 2) {
+      a = toPx(0, i / 10); b = toPx(1, i / 10);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+    ctx.strokeStyle = "#3a3a3a";
+    [0, 1].forEach(function (v) {
+      a = toPx(0, v); b = toPx(1, v);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    });
+    a = toPx(0, 0); b = toPx(1, 1);
+    ctx.strokeStyle = "#333";
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    ctx.setLineDash([]);
+    var s = toPx(0, 0), e = toPx(1, 1);
+    var h1 = toPx(p1.x, p1.y), h2 = toPx(p2.x, p2.y);
+    ctx.strokeStyle = "#777";
+    ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(h1.x, h1.y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(e.x, e.y); ctx.lineTo(h2.x, h2.y); ctx.stroke();
+    ctx.strokeStyle = "#f5a044";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.bezierCurveTo(h1.x, h1.y, h2.x, h2.y, e.x, e.y);
+    ctx.stroke();
+    ctx.fillStyle = "#f5a044";
+    ctx.fillRect(s.x - 5, s.y - 5, 10, 10);
+    ctx.fillRect(e.x - 5, e.y - 5, 10, 10);
+    [h1, h2].forEach(function (h) {
+      ctx.beginPath(); ctx.arc(h.x, h.y, 8, 0, Math.PI * 2);
+      ctx.fillStyle = "#f2dcb4"; ctx.fill();
+      ctx.beginPath(); ctx.arc(h.x, h.y, 3, 0, Math.PI * 2);
+      ctx.fillStyle = "#101010"; ctx.fill();
+    });
+    bezval.textContent = "cubic-bezier(" +
+      p1.x.toFixed(2) + ", " + p1.y.toFixed(2) + ", " +
+      p2.x.toFixed(2) + ", " + p2.y.toFixed(2) + ")";
+  }
+  var dragging = null;
+  function pick(px, py) {
+    var c = [p1, p2], best = null, bestD = 26 * 26, i, h, d;
+    for (i = 0; i < 2; i++) {
+      h = toPx(c[i].x, c[i].y);
+      d = (h.x - px) * (h.x - px) + (h.y - py) * (h.y - py);
+      if (d < bestD) { best = c[i]; bestD = d; }
+    }
+    return best;
+  }
+  function evPos(ev) {
+    var r = cv.getBoundingClientRect();
+    return { x: ev.clientX - r.left, y: ev.clientY - r.top };
+  }
+  cv.addEventListener("pointerdown", function (ev) {
+    var p = evPos(ev);
+    dragging = pick(p.x, p.y);
+    if (dragging) { cv.setPointerCapture(ev.pointerId); cv.classList.add("grabbing"); }
+  });
+  cv.addEventListener("pointermove", function (ev) {
+    if (!dragging) return;
+    var p = evPos(ev), n = toNorm(p.x, p.y);
+    dragging.x = Math.min(1, Math.max(0, n.x));
+    dragging.y = Math.min(Y_MAX, Math.max(Y_MIN, n.y));
+    draw();
+  });
+  ["pointerup", "pointercancel"].forEach(function (n) {
+    cv.addEventListener(n, function () { dragging = null; cv.classList.remove("grabbing"); });
+  });
+  document.querySelectorAll(".presets a").forEach(function (el) {
+    el.addEventListener("click", function () {
+      var v = el.getAttribute("data-p").split(",").map(Number);
+      p1.x = v[0]; p1.y = v[1]; p2.x = v[2]; p2.y = v[3];
+      draw();
+    });
+  });
+  function loop(now) {
+    var cycle = (now % 2000) / 2000;
+    dot.style.left = (3 + easedY(Math.min(1, cycle / 0.7)) * 94) + "%";
+    requestAnimationFrame(loop);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
