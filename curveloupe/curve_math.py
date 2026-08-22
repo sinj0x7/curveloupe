@@ -1,23 +1,3 @@
-# CurveLoupe -- (c) 2026 sinj0x7 -- MIT License, see LICENSE.txt.
-"""
-curve_math.py -- pure bezier math for CurveLoupe.
-
-No Fusion / Resolve dependencies in this module, so it can be unit-tested
-with any plain Python 3 interpreter.
-
-Coordinate model
-----------------
-The editor works in a normalized "easing" space:
-
-    P0 = (0.0, p0y)   left keyframe   (p0y is usually 0.0)
-    C1 = (c1x, c1y)   right handle of the left keyframe
-    C2 = (c2x, c2y)   left handle of the right keyframe
-    P3 = (1.0, p3y)   right keyframe  (p3y is usually 1.0)
-
-X is always the 0..1 fraction of the segment's time range.
-Y is the fraction of the segment's value range (may exceed 0..1 for
-overshoot / anticipation curves).
-"""
 
 EPS_FLAT = 1e-12
 
