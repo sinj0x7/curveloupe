@@ -1,5 +1,20 @@
-# Kinetiq -- (c) 2026 sinj0x7 -- MIT License, see LICENSE.txt.
+# CurveLoupe -- (c) 2026 sinj0x7 -- MIT License, see LICENSE.txt.
 # https://github.com/sinj0x7
+"""
+CurveLoupe -- an oversized bezier curve editor for DaVinci Resolve / Fusion.
+
+Fusion's native spline editor is small and demands constant zooming for
+precise handle work. CurveLoupe opens a large floating window (built with
+Fusion's native UIManager, no web view) where one keyframe segment can be
+edited comfortably, then written straight back onto the BezierSpline of the
+selected tool via the scripting API.
+
+Install: copy the whole "curveloupe" folder into Fusion's Scripts:/Comp
+folder (see README.md), then run it from Workspace > Scripts inside the
+Fusion page.
+
+Runs inside Resolve's own Python 3 environment; stdlib only.
+"""
 
 import os
 import sys
@@ -12,7 +27,7 @@ import zlib
 # Sibling module import (curve_math / presets).
 #
 # When Fusion executes this script __file__ is normally defined, but we fall
-# back to scanning the standard Fusion Scripts folders for a "kinetiq"
+# back to scanning the standard Fusion Scripts folders for a "curveloupe"
 # directory just in case.
 # --------------------------------------------------------------------------
 
@@ -43,7 +58,7 @@ def _candidate_module_dirs():
     ])
     for root in roots:
         for sub in ("Comp", "Edit", "Tool", "Utility"):
-            dirs.append(os.path.join(root, sub, "kinetiq"))
+            dirs.append(os.path.join(root, sub, "curveloupe"))
     return [d for d in dirs if d and os.path.isdir(d)]
 
 
@@ -390,7 +405,7 @@ SPIN_IDS = ("CLP0X", "CLP0Y", "CLH1X", "CLH1Y", "CLH2X", "CLH2Y", "CLP3X", "CLP3
 POINT_NAMES = ("Start point", "Handle 1", "Handle 2", "End point")
 
 
-class KinetiqApp(object):
+class CurveLoupeApp(object):
     def __init__(self, fu_obj, bmd_obj):
         self.fu = fu_obj
         self.bmd = bmd_obj
@@ -460,7 +475,7 @@ class KinetiqApp(object):
 
         self.win = self.disp.AddWindow({
             "ID": WIN_ID,
-            "WindowTitle": "Kinetiq - Bezier Curve Editor",
+            "WindowTitle": "CurveLoupe - Bezier Curve Editor",
             "Geometry": [100, 60, 1060, 740],
             "Events": {"Close": True, "KeyPress": True, "KeyRelease": True},
         }, [
@@ -523,7 +538,7 @@ class KinetiqApp(object):
                 ] + preset_rows + [
                     ui.VGap(0, 1),
                     ui.Label({
-                        "Text": '<span style="color:#7a7a74;">Kinetiq v1.0 '
+                        "Text": '<span style="color:#7a7a74;">CurveLoupe v1.0 '
                                 "&nbsp;\u00b7&nbsp; by sinj0x7 "
                                 "&nbsp;\u00b7&nbsp; MIT licensed</span>",
                         "Alignment": {"AlignHCenter": True},
@@ -586,7 +601,7 @@ class KinetiqApp(object):
         png = self.canvas.render(p0, c1, c2, p3, self.selected)
 
         self._frame += 1
-        path = os.path.join(self._tmpdir, "kinetiq_%06d.png" % self._frame)
+        path = os.path.join(self._tmpdir, "curveloupe_%06d.png" % self._frame)
         try:
             with open(path, "wb") as f:
                 f.write(png)
@@ -1036,7 +1051,7 @@ class KinetiqApp(object):
         # their keyframe (older Fusion used absolute). Try relative first,
         # verify by reading back, and fall back to absolute.
         try:
-            comp.StartUndo("Kinetiq: shape curve")
+            comp.StartUndo("CurveLoupe: shape curve")
         except Exception:
             pass
         ok = False
@@ -1105,7 +1120,7 @@ def main():
         fu_obj, bmd_obj = _get_fusion_env()
     except Exception as e:
         traceback.print_exc()
-        print("Kinetiq: could not connect to Fusion/Resolve: %s" % e)
+        print("CurveLoupe: could not connect to Fusion/Resolve: %s" % e)
         return
 
     if _IMPORT_ERROR is not None:
@@ -1114,15 +1129,15 @@ def main():
         disp = bmd_obj.UIDispatcher(ui)
         win = disp.AddWindow({
             "ID": "CLErrWin",
-            "WindowTitle": "Kinetiq - install problem",
+            "WindowTitle": "CurveLoupe - install problem",
             "Geometry": [200, 200, 560, 160],
             "Events": {"Close": True},
         }, [
             ui.VGroup({"Spacing": 8}, [
                 ui.Label({
-                    "Text": "Kinetiq could not import its helper modules "
+                    "Text": "CurveLoupe could not import its helper modules "
                             "(curve_math.py / presets.py):\n%s\n\n"
-                            "Copy the WHOLE 'kinetiq' folder into Fusion's "
+                            "Copy the WHOLE 'curveloupe' folder into Fusion's "
                             "Scripts:/Comp folder (see README.md)." % _IMPORT_ERROR,
                     "WordWrap": True,
                 }),
@@ -1134,7 +1149,7 @@ def main():
         win.Hide()
         return
 
-    app = KinetiqApp(fu_obj, bmd_obj)
+    app = CurveLoupeApp(fu_obj, bmd_obj)
     app.run()
 
 

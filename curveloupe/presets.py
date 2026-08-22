@@ -1,3 +1,6 @@
+# CurveLoupe -- (c) 2026 sinj0x7 -- MIT License, see LICENSE.txt.
+"""
+presets.py -- preset curve library for CurveLoupe.
 
 
 ONE_THIRD = 1.0 / 3.0

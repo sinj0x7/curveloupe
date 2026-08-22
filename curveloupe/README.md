@@ -1,4 +1,4 @@
-# Kinetiq
+# CurveLoupe
 
 > Made by [sinj0x7](https://github.com/sinj0x7). Started as a help for a friend
 > who was struggling with DaVinci Resolve's graphs. MIT licensed — completely
@@ -7,7 +7,7 @@
 An oversized bezier curve editor for DaVinci Resolve / Fusion.
 
 Fusion's native spline editor is small and demands constant zooming for
-precise handle adjustments. Kinetiq opens a large floating window (built
+precise handle adjustments. CurveLoupe opens a large floating window (built
 with Fusion's own UIManager toolkit — no browser, no Electron, no external
 app) where you can shape one keyframe segment comfortably, then write the
 result straight back onto the tool's BezierSpline via the scripting API.
@@ -21,7 +21,7 @@ result straight back onto the tool's BezierSpline via the scripting API.
 
 ## Install
 
-Copy the **whole `kinetiq` folder** (all files, not just `Kinetiq.py`)
+Copy the **whole `curveloupe` folder** (all files, not just `CurveLoupe.py`)
 into Fusion's `Scripts:/Comp` folder:
 
 | OS | Path |
@@ -37,10 +37,10 @@ folder (`%APPDATA%\Blackmagic Design\Fusion\Scripts\Comp\` on Windows).
 You should end up with:
 
 ```
-...\Scripts\Comp\kinetiq\Kinetiq.py
-...\Scripts\Comp\kinetiq\curve_math.py
-...\Scripts\Comp\kinetiq\presets.py
-...\Scripts\Comp\kinetiq\README.md
+...\Scripts\Comp\curveloupe\CurveLoupe.py
+...\Scripts\Comp\curveloupe\curve_math.py
+...\Scripts\Comp\curveloupe\presets.py
+...\Scripts\Comp\curveloupe\README.md
 ```
 
 `Scripts:/Edit` also works if you prefer the script visible from the Edit
@@ -54,11 +54,11 @@ page menu, but the script itself operates on the current Fusion comp, so
    Transform with an animated Size. The control must already be animated
    with a keyframe spline (right-click the control > **Animate**) and have
    at least two keyframes.
-3. Menu: **Workspace > Scripts > kinetiq > Kinetiq**.
+3. Menu: **Workspace > Scripts > curveloupe > CurveLoupe**.
 
 ## Usage
 
-- On launch, Kinetiq reads the selected (active) tool, lists all of its
+- On launch, CurveLoupe reads the selected (active) tool, lists all of its
   BezierSpline-animated controls in the dropdown, and loads the first
   keyframe segment onto the canvas.
 - **Canvas** — the curve is shown normalized: x is the 0–1 time fraction of
@@ -87,13 +87,13 @@ page menu, but the script itself operates on the current Fusion comp, so
 - Applying strips the Linear/Step flag from the two keyframes of the edited
   segment (those flags would override bezier handles).
 - If the two keyframes have the same value (a flat segment), the y axis has
-  no natural scale; Kinetiq then treats y edits as raw value offsets and
+  no natural scale; CurveLoupe then treats y edits as raw value offsets and
   says so in the status line.
 - Handle X positions are clamped inside the segment when writing, since
   Fusion requires a key's right handle to sit at or after the key and the
   left handle at or before it.
 - Different Resolve/Fusion versions disagree about whether `SetKeyFrames()`
-  handle coordinates are absolute or relative to the keyframe. Kinetiq
+  handle coordinates are absolute or relative to the keyframe. CurveLoupe
   writes, reads back to verify, and automatically retries with the other
   convention, so both behave correctly.
 - The canvas is rendered as a PNG shown on a native widget (UIManager has
