@@ -1,13 +1,4 @@
-# Kinetiq -- (c) 2026 sinj0x7 -- MIT License, see LICENSE.txt.
-"""
-presets.py -- preset curve library for Kinetiq.
 
-Each preset is (label, c1, c2) where c1 / c2 are normalized control points
-(the endpoints are always (0, 0) and (1, 1) when a preset is applied).
-
-Values follow the CSS cubic-bezier convention, e.g. CSS "ease-in" is
-cubic-bezier(0.42, 0, 1, 1) which here would be roughly "Ease In 50%".
-"""
 
 ONE_THIRD = 1.0 / 3.0
 TWO_THIRDS = 2.0 / 3.0
