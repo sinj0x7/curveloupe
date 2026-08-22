@@ -1,8 +1,8 @@
 # Kinetiq
 
-A big bezier curve editor for DaVinci Resolve / Fusion.
+A curve editor for DaVinci Resolve 
 
-Made by [sinj0x7](https://github.com/sinj0x7). Started as help for a friend who was struggling with Resolve’s graphs. MIT licensed — free to use, modify, and share.
+Started as help for a friend who was struggling with Resolve’s graphs. MIT licensed — free to use, modify, and share.
 
 **Site + download:** [sinj0x7.github.io/kinetiq](https://sinj0x7.github.io/kinetiq)  
 **Instagram:** [offgridkhaled](https://instagram.com/offgridkhaled)
