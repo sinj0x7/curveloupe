@@ -1,20 +1,5 @@
 # Kinetiq -- (c) 2026 sinj0x7 -- MIT License, see LICENSE.txt.
 # https://github.com/sinj0x7
-"""
-Kinetiq -- an oversized bezier curve editor for DaVinci Resolve / Fusion.
-
-Fusion's native spline editor is small and demands constant zooming for
-precise handle work. Kinetiq opens a large floating window (built with
-Fusion's native UIManager, no web view) where one keyframe segment can be
-edited comfortably, then written straight back onto the BezierSpline of the
-selected tool via the scripting API.
-
-Install: copy the whole "kinetiq" folder into Fusion's Scripts:/Comp
-folder (see README.md), then run it from Workspace > Scripts inside the
-Fusion page.
-
-Runs inside Resolve's own Python 3 environment; stdlib only.
-"""
 
 import os
 import sys
