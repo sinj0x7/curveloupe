@@ -4,11 +4,11 @@ A bigger graph editor for DaVinci Resolve.
 
 I made this because a friend was wasting time on Fusion’s tiny graphs. Same curve, bigger window, writes back to your keyframes.
 
-**[Site / download](https://sinj0x7.github.io/kinetiq)**
+**[Site / download](https://sinj0x7.github.io/curveloupe)**
 
 ## Install
 
-Download [CurveLoupe.zip](https://sinj0x7.github.io/kinetiq/CurveLoupe.zip), unzip it, copy the `curveloupe` folder here:
+Download [CurveLoupe.zip](https://sinj0x7.github.io/curveloupe/CurveLoupe.zip), unzip it, copy the `curveloupe` folder here:
 
 | OS | Path |
 |---|---|
