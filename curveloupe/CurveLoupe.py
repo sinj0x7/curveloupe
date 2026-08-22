@@ -475,7 +475,7 @@ class CurveLoupeApp(object):
 
         self.win = self.disp.AddWindow({
             "ID": WIN_ID,
-            "WindowTitle": "CurveLoupe - Bezier Curve Editor",
+            "WindowTitle": "CurveLoupe",
             "Geometry": [100, 60, 1060, 740],
             "Events": {"Close": True, "KeyPress": True, "KeyRelease": True},
         }, [
@@ -538,9 +538,7 @@ class CurveLoupeApp(object):
                 ] + preset_rows + [
                     ui.VGap(0, 1),
                     ui.Label({
-                        "Text": '<span style="color:#7a7a74;">CurveLoupe v1.0 '
-                                "&nbsp;\u00b7&nbsp; by sinj0x7 "
-                                "&nbsp;\u00b7&nbsp; MIT licensed</span>",
+                        "Text": '<span style="color:#7a7a74;">CurveLoupe v1.0</span>',
                         "Alignment": {"AlignHCenter": True},
                     }),
                 ]),

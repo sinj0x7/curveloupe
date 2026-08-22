@@ -1,16 +1,9 @@
 # CurveLoupe
 
-> Made by [sinj0x7](https://github.com/sinj0x7). Started as a help for a friend
-> who was struggling with DaVinci Resolve's graphs. MIT licensed — completely
-> free to use, modify, and share. See `LICENSE.txt`.
+A bigger graph editor for DaVinci Resolve. Started because a friend was
+stuck fighting Fusion's tiny spline view.
 
-An oversized bezier curve editor for DaVinci Resolve / Fusion.
-
-Fusion's native spline editor is small and demands constant zooming for
-precise handle adjustments. CurveLoupe opens a large floating window (built
-with Fusion's own UIManager toolkit — no browser, no Electron, no external
-app) where you can shape one keyframe segment comfortably, then write the
-result straight back onto the tool's BezierSpline via the scripting API.
+Free. MIT. See `LICENSE.txt`.
 
 ## Requirements
 
